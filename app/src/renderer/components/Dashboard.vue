@@ -17,11 +17,10 @@
 	.logo svg {
 		color: white;
 	}
-
-  .loading {
-    background-color: rgba(249, 250, 252,.7);
-  }
-
+	
+	.loading {
+		background-color: rgba(249, 250, 252, .7);
+	}
 </style>
 
 <template>
@@ -40,25 +39,65 @@
 				</el-button>
 			</el-col>
 		</el-row>
-		<add-token ref="addToken" @token-validated="addAccount"></add-token>
+		<freckle-account v-for="account in accounts" :account="account" v-loading="loading" element-loading-text="Loading Accounts"></freckle-account>
+		<add-token ref="addToken" @token-validated="createAccount"></add-token>
 	</div>
 </template>
 
 <script>
+	import { mapGetters } from 'vuex';
+	import Freckle from '../services/freckle';
 	import AddToken from './AddToken';
+	import FreckleAccount from './FreckleAccount';
+	import db from '../services/database';
 
 	export default {
+		data: function() {
+			return {
+				loading: false
+			}
+		},
+        computed: {
+			...mapGetters({
+                accounts: 'filteredAccounts',
+                paging: 'accountPaging'
+            })
+        },
 		methods: {
 			addToken() {
 				this.$refs.addToken.open();
 			},
-			addAccount(service) {
-				this.$store.dispatch('addToken', service.token);
-				console.log('Service: ', service);
+			createAccount(account) {
+				this.$store.dispatch('addToken', account.token);
+				this.$store.dispatch('addAccount', account);
 			}
 		},
+		mounted: function () {
+
+			this.loading = true;
+
+			let tokens = db.getTokens();
+
+			tokens.forEach(token => {
+
+				let freckle = new Freckle(token);
+
+				freckle.validate()
+					.then(response => {
+						this.$store.dispatch('addAccount', freckle);
+					})
+					.catch(error => {
+						// load invalid account
+					});
+			});
+
+			console.log('Accounts: ', this.accounts);
+
+			this.loading = false;
+		},
 		components: {
-			'add-token': AddToken
+			'add-token': AddToken,
+			'freckle-account': FreckleAccount
 		}
 	};
 

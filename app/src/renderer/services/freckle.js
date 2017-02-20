@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import rp from 'request-promise';
 
 class Freckle {

@@ -1,4 +1,4 @@
-const remote = window.require('electron').remote;
+import db from '../../services/database';
 
 const state = {
 	list: [],
@@ -47,28 +47,14 @@ const actions = {
 
 	addToken({ commit, state }, token) {
 
-		let config = remote.getGlobal('config');
-
-		config.get('tokens')
-			.push(token)
-			.write();
+		db.addToken(token);		
 
 		commit('addToken', token);
 	},
 
 	removeToken({ commit, state }, token) {
 
-		let config = remote.getGlobal('config');
-		let tokens = config.get('tokens').value();
-
-		let index = tokens.indexOf(token);
-
-		if (index > -1) {
-			tokens.splice(index, 1);
-		}
-
-		config.set('tokens', tokens)
-			.write();
+		db.deleteToken(token);
 
 		commit('removeToken', token);
 	},

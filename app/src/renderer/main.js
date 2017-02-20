@@ -5,6 +5,7 @@ import Router from 'vue-router'
 import ElementUI from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en';
 import Icon from 'vue-awesome/components/Icon.vue';
+import { Loading } from 'element-ui';
 
 import 'element-ui/lib/theme-default/index.css';
 import 'vue-awesome/icons';
@@ -16,6 +17,7 @@ Vue.use(Electron)
 Vue.use(Resource)
 Vue.use(Router)
 Vue.use(ElementUI, { locale })
+Vue.use(Loading)
 
 Vue.component('icon', Icon);
 

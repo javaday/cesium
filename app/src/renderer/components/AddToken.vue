@@ -17,7 +17,6 @@
 </template>
 
 <script>
-	import { Loading } from 'element-ui';
 	import notifications from './mixins/notifications';
 	import Freckle from '../services/freckle';
 
@@ -59,7 +58,7 @@
 
 				this.close();
 
-				let loading = Loading.service({
+				let loading = this.$loading({
 					text: 'Validating Token',
 					customClass: 'loading'
 				});
