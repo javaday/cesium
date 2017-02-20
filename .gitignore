@@ -8,4 +8,5 @@ npm-debug.log.*
 thumbs.db
 !.gitkeep
 cesium.json
+tokens.txt
 
