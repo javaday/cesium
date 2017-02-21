@@ -1,6 +1,6 @@
 import rp from 'request-promise';
 
-class Freckle {
+class FreckleService {
 
 	constructor(token) {
 
@@ -21,7 +21,7 @@ class Freckle {
 				})
 				.then((response) => {
 					this.user = response;
-					resolve(true);
+					resolve(this);
 				})
 				.catch((error) => {
 					console.log(error);
@@ -62,7 +62,7 @@ class Freckle {
 
 	getRequestOptions(action) {
 
-		return {
+		let options = {
 			uri: 'https://api.letsfreckle.com/v2/' + action,
 			qs: {
 				freckle_token: this.token
@@ -73,8 +73,12 @@ class Freckle {
 			json: true
 		};
 
+		if (action === 'projects') {
+			console.log('Getting: ', options);
+		}	
+		return options;		
 	}
 
 }
 
-export default Freckle;
+export default FreckleService;

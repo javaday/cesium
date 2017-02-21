@@ -50,7 +50,6 @@
 			this.account.getProjects()
 				.then(projects => {
 					this.projects = projects;
-					console.log('Projects: ', projects);
 					this.loading = false;
 				})
 				.catch(error => {

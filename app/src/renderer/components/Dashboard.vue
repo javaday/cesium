@@ -39,30 +39,30 @@
 				</el-button>
 			</el-col>
 		</el-row>
-		<freckle-account v-for="account in accounts" :account="account" v-loading="loading" element-loading-text="Loading Accounts"></freckle-account>
+		<freckle-account v-for="freckleService in accounts" :account="freckleService" v-loading="loading" element-loading-text="Loading Accounts"></freckle-account>
 		<add-token ref="addToken" @token-validated="createAccount"></add-token>
 	</div>
 </template>
 
 <script>
 	import { mapGetters } from 'vuex';
-	import Freckle from '../services/freckle';
+	import FreckleService from '../services/freckle';
 	import AddToken from './AddToken';
 	import FreckleAccount from './FreckleAccount';
 	import db from '../services/database';
 
 	export default {
-		data: function() {
+		data: function () {
 			return {
 				loading: false
 			}
 		},
-        computed: {
+		computed: {
 			...mapGetters({
-                accounts: 'filteredAccounts',
-                paging: 'accountPaging'
-            })
-        },
+				accounts: 'filteredAccounts',
+				paging: 'accountPaging'
+			})
+		},
 		methods: {
 			addToken() {
 				this.$refs.addToken.open();
@@ -77,21 +77,20 @@
 			this.loading = true;
 
 			let tokens = db.getTokens();
+			let validations = [];
 
 			tokens.forEach(token => {
-
-				let freckle = new Freckle(token);
-
-				freckle.validate()
-					.then(response => {
-						this.$store.dispatch('addAccount', freckle);
-					})
-					.catch(error => {
-						// load invalid account
-					});
+				let service = new FreckleService(token);
+				validations.push(service.validate());
 			});
 
-			console.log('Accounts: ', this.accounts);
+			Promise.all(validations).then(results => {
+				results.forEach(result => {
+					if(result.user) {
+						this.$store.dispatch('addAccount', result);
+					}
+				});
+			});
 
 			this.loading = false;
 		},
