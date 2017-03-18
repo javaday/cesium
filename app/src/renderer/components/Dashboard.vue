@@ -45,6 +45,7 @@
 </template>
 
 <script>
+	import { ipcRenderer } from 'electron';
 	import { mapGetters } from 'vuex';
 	import FreckleService from '../services/freckle';
 	import AddToken from './AddToken';
@@ -93,6 +94,12 @@
 			});
 
 			this.loading = false;
+
+			ipcRenderer.on('Menu', (event, message) => {
+				if(message === 'AddToken') {
+					this.$refs.addToken.open();
+				}
+			});
 		},
 		components: {
 			'add-token': AddToken,

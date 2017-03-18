@@ -5,6 +5,7 @@
   "main": "./dist/main.js",
   "dependencies": {
     "element-ui": "^1.1.6",
+    "later": "^1.2.0",
     "lowdb": "^0.15.5",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
